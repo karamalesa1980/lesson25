@@ -86,5 +86,10 @@ post '/contacts' do
 	db.execute "insert into users(email, body) values('#{@user_email}', '#{@user_body}')"
 
 	db.close
+
+
+
 	erb :contacts
+
+
 end
