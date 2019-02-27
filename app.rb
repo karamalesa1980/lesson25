@@ -2,8 +2,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'pony'
-require 'mail'
+require 'sqlite3'
 
 
 get '/' do
@@ -77,25 +76,15 @@ post '/visit' do
 	erb :visit	
 	
 end
-
 post '/contacts' do 
-	require 'pony'	
-		Pony.mail({
-		  :to => params[:user_massage],
-		  :from => params[:user_email],
-		  
-		  :headers => { 'Content-Type' => 'text/html' },
-		  :body => "<h1>hey there!</h1>",
-		  :via => :smtp,
-		  :smtp => {
-		    :host => 'smtp.gmail.com',
-		    :port => '587',
-		    :auth => :plain,
-		    :user => 'karamalesa',
-		    :password => 'aselamarakmisha2013',
-		    :tls => true, 
-			:domain => 'http://a72ce4fc.ngrok.io'
-		}
-			} )
+
+	@user_email = params[:user_email]
+	@user_body = params[:user_body]
+
+	db = SQLite3::Database.new 'test.sqlite3'
+
+	db.execute "insert into users(email, body) values('#{@user_email}', '#{@user_body}')"
+
+	db.close
 	erb :contacts
 end
